@@ -4,7 +4,7 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
-function getBooks() {
+function getAllBooks() {
   return new Promise((resolve, reject) => {
     resolve(books);
   });
@@ -13,8 +13,8 @@ function getBooks() {
 // Get the book list available in the shop
 public_users.get("/", async function (req, res) {
   try {
-    const bks = await getBooks();
-    res.send(JSON.stringify(bks));
+    const allBooks = await getAllBooks();
+    res.send(JSON.stringify(allBooks));
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Internal Server Error" });
@@ -38,10 +38,10 @@ public_users.get("/isbn/:isbn", async function (req, res) {
 public_users.get("/author/:author", function (req, res) {
   const author = req.params.author;
   try {
-    getBooks()
-      .then((bookEntries) => Object.values(bookEntries))
+    getAllBooks()
+      .then((ent) => Object.values(ent))
       .then((books) => books.filter((book) => book.author === author))
-      .then((filteredBooks) => res.send(filteredBooks));
+      .then((result) => res.send(result));
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -54,10 +54,10 @@ public_users.get("/author/:author", function (req, res) {
 public_users.get("/title/:title", function (req, res) {
   const title = req.params.title;
   try {
-    getBooks()
-      .then((bookEntries) => Object.values(bookEntries))
+    getAllBooks()
+      .then((ent) => Object.values(ent))
       .then((books) => books.filter((book) => book.title === title))
-      .then((filteredBooks) => res.send(filteredBooks));
+      .then((result) => res.send(result));
   } catch (error) {
     console.error(error);
     res
